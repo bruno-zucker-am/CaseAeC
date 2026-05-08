@@ -41,16 +41,27 @@ dotnet new mvc -n CaseAeC --output .
 ### 2. Configuracao de Dependencias
 Para garantir a persistencia de dados com SQL Server e ferramentas de migracao, instale os pacotes via terminal:
 
-dotnet add package Microsoft.EntityFrameworkCore.SqlServer
-dotnet add package Microsoft.EntityFrameworkCore.Design
+export PATH="$PATH:$HOME/.dotnet/tools"
 
-### 3. Variaveis de Ambiente
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 8.0.12
+dotnet add package Microsoft.EntityFrameworkCore.Design --version 8.0.12
+
+### 3. Migrations e Banco de Dados
+Para criar a estrutura inicial do banco de dados:
+
+dotnet ef migrations add InitialCreate
+
+Se o comando acima finalizar sem erros, rode este para criar as tabelas de verdade dentro do container do Docker:
+
+dotnet ef database update
+
+### 4. Variaveis de Ambiente
 O sistema utiliza um arquivo .env para gerenciar credenciais sensiveis. Use o arquivo de exemplo para configurar seu ambiente:
 
 cp .env_exemplo .env
 # Edite o .env com sua senha do SQL Server
 
-### 4. Orquestracao com Docker
+### 5. Orquestracao com Docker
 Para subir todo o ecossistema (Aplicacao + Banco de Dados + Nginx), utilize o comando:
 
 docker compose up -d --build
